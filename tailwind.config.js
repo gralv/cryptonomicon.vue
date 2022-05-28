@@ -20,4 +20,10 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
   ],
+  safelist: [
+    {
+      //pattern: [/./, /^dark/]
+      //greedy: [/^dark/]
+    },
+  ]
 };
