@@ -81,7 +81,7 @@
               {{t.name}} - USD
             </dt>
             <dd class="mt-1 text-3xl font-semibold text-gray-900">
-              {{t.price}}
+              {{formatPrice(t.price)}}
             </dd>
           </div>
           <div class="w-full border-t border-gray-200"></div>
@@ -166,7 +166,9 @@
 
   // график сломан если везде одинаковые значения - исправлено все значения приведены к одному числу
   // при удалени графика остается выбор
-export default {
+import {subscribeToTicker, unsubscribeFromTicker} from "./api";
+
+  export default {
   name: "App",
   data(){
     return {
@@ -208,10 +210,11 @@ export default {
 
     if(tickersData){
       this.tickers = JSON.parse(tickersData);
-      // this.tickers.forEach(ticker => {
-      //   //this.subscribeToUpdates(ticker.name)
-      // })
+      this.tickers.forEach(ticker => {
+        subscribeToTicker(ticker.name, newPrice => this.updateTicker(ticker.name, newPrice));
+      })
     }
+    setInterval(this.updateTickers, 50000000000)
   },
   mounted(){
     (async ()=>{
@@ -229,11 +232,12 @@ export default {
     },
 
     tickers(newValue, oldValue){
-      console.log(newValue === oldValue)
+      //console.log(newValue === oldValue)
       localStorage.setItem('cryptonomicon-list', JSON.stringify(this.tickers));
     },
 
     paginatedTickers(){
+      //console.log('paginatedTickers',this.tickers.length)
       if(this.paginatedTickers.length === 0 && this.page > 1){
         this.page -=1
       }
@@ -314,18 +318,27 @@ export default {
     },
   },
   methods:{
-    subscribeToUpdates(tickerName){
-      setInterval( async ()=>{
-        const f = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${tickerName}&tsyms=USD&api_key=96c59cb0f935b4ce170eca18cca65ec9d791c07cf8a9c8d8170a3480702de0cd`)
-        const data = await f.json()
-        //console.log(data.USD)
-        //currentTicker.price = data.USD - не заработала реактивность
-        this.tickers.find(t=>t.name===tickerName).price = data.USD
-        //currentTicker.price = data.USD
-        if(this.selectedTicker?.name === tickerName){
-          this.graph.push(data.USD)
-        }
-      },2000000);
+    updateTicker(tickerName, price){
+      this.tickers
+              .filter(t=>t.name === tickerName)
+              .forEach(t=>{
+                t.price = price;
+              });
+  },
+    formatPrice(price){
+      if(price === '-') return price;
+      return price>1?price.toFixed(4):price.toPrecision(4)
+    },
+    async updateTickers(){
+      // if(!this.tickers.length){
+      //   return;
+      // }
+      //   // const exchangeData = await loadTickers(this.tickers.map(t => t.name));
+      //   this.tickers.forEach(ticker => {
+      //     const price = exchangeData[ticker.name.toUpperCase()];
+      //     ticker.price = price ?? '-';
+      //   });
+
     },
 
     add(){
@@ -339,27 +352,29 @@ export default {
         price:"-"
       };
       this.tickers = [...this.tickers, currentTicker];
-      this.filter = " ";
-      this.subscribeToUpdates(currentTicker.name);
-
-      this.ticker = ""
+      this.ticker = "";
+      this.filter = "";
+      subscribeToTicker(currentTicker.name, newPrice => this.updateTicker(currentTicker.name, newPrice))
     },
+
+    select(curTicker){
+      this.selectedTicker = curTicker;
+    },
+
     handleDelete(tickerToRemove){
       // this.tickers.forEach((tick, index)=>{
       //   if(tick.name == name){
       //     this.tickers.splice(index, 1)
       //   }
       // })
-      if(tickerToRemove===this.selectedTicker){
+      this.tickers = this.tickers.filter(t => t !== tickerToRemove);
+      if(this.selectedTicker === tickerToRemove){
         this.selectedTicker = null;
       }
-      this.tickers = this.tickers.filter(item => item !== tickerToRemove);
+      unsubscribeFromTicker(tickerToRemove.name)
     },
 
 
-    select(curTicker){
-      this.selectedTicker = curTicker;
-    },
 
     addPrompt(e){
       if(e.code === "Enter"){
