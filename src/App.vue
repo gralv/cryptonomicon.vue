@@ -322,6 +322,9 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./api";
       this.tickers
               .filter(t=>t.name === tickerName)
               .forEach(t=>{
+                if(t === this.selectedTicker){
+                  this.graph.push(price)
+                }
                 t.price = price;
               });
   },
@@ -329,7 +332,7 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./api";
       if(price === '-') return price;
       return price>1?price.toFixed(4):price.toPrecision(4)
     },
-    async updateTickers(){
+    // async updateTickers(){
       // if(!this.tickers.length){
       //   return;
       // }
@@ -339,7 +342,7 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./api";
       //     ticker.price = price ?? '-';
       //   });
 
-    },
+    // },
 
     add(){
       if(this.hasTicker(this.ticker)){
