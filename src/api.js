@@ -9,7 +9,6 @@ socket.addEventListener('message', e =>{
     if(type !== AGGREGATE_INDEX  || newPrice === undefined){
         return;
     }
-    //debugger;
     const handlers = tickersHandlers.get(currency) ?? [];
     handlers.forEach(fn => fn(newPrice))
 });
