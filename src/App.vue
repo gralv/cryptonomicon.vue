@@ -110,7 +110,7 @@
         <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
           {{selectedTicker.name}} - USD
         </h3>
-        <div class="flex items-end border-gray-600 border-b border-l h-64">
+        <div class="flex items-end border-gray-600 border-b border-l h-64" ref="graph">
           <div
                   v-for="(bar, idx) in normalizedGraph"
                   v-bind:key="idx"
@@ -179,6 +179,7 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./api";
       selectedTicker: null,
 
       graph:[],
+      maxGraphElements: 1,
 
       coinList:[],
       coinPrompts:[],
@@ -223,7 +224,14 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./api";
         const data = await response.json();
         this.coinList.push(new Map(Object.entries(data.Data)));
       }
-    })()
+    })();
+
+    window.addEventListener('resize', this.calculateMaxGraphElements)
+
+  },
+
+  beforeUnmount(){
+    window.removeEventListener('resize', this.calculateMaxGraphElements)
   },
   watch: {
 
@@ -318,12 +326,21 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./api";
     },
   },
   methods:{
+    calculateMaxGraphElements(){
+     if(!this.$refs.graph){
+       return;
+     }
+      this.maxGraphElements = this.$refs.graph.clientWidth / 38;
+    },
     updateTicker(tickerName, price){
       this.tickers
               .filter(t=>t.name === tickerName)
               .forEach(t=>{
                 if(t === this.selectedTicker){
-                  this.graph.push(price)
+                  this.graph.push(price);
+                  while(this.graph.length > this.maxGraphElements){
+                    this.graph.shift();
+                  }
                 }
                 t.price = price;
               });
@@ -362,6 +379,9 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./api";
 
     select(curTicker){
       this.selectedTicker = curTicker;
+      this.$nextTick().then(() => {
+        this.calculateMaxGraphElements();
+      })
     },
 
     handleDelete(tickerToRemove){
