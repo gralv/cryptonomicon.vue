@@ -76,7 +76,9 @@
                 v-bind:class="{ 'border-4': selectedTicker===t }"
                 class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
         >
-          <div class="px-4 py-5 sm:p-6 text-center">
+          <div
+                  v-bind:class="{ 'bg-red-100': t.price===0 }"
+                  class="px-4 py-5 sm:p-6 text-center">
             <dt class="text-sm font-medium text-gray-500 truncate">
               {{t.name}} - USD
             </dt>
@@ -166,7 +168,7 @@
 
   // график сломан если везде одинаковые значения - исправлено все значения приведены к одному числу
   // при удалени графика остается выбор
-import {subscribeToTicker, unsubscribeFromTicker} from "./api";
+import {subscribeToTicker, unsubscribeFromTicker} from "./subscribe";
 
   export default {
   name: "App",
@@ -326,10 +328,11 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./api";
                   this.graph.push(price)
                 }
                 t.price = price;
+                console.log("updateTicker", `${t.name} - ${t.price}`)
               });
   },
     formatPrice(price){
-      if(price === '-') return price;
+      if(price === '-' || price === 0) return "-";
       return price>1?price.toFixed(4):price.toPrecision(4)
     },
     // async updateTickers(){
