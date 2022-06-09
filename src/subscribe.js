@@ -17,7 +17,7 @@ worker.port.start();
 export const subscribeToTicker = (ticker, cb) => {
     const subscribers = tickersHandlers.get(ticker) || [];
     tickersHandlers.set(ticker, [...subscribers, cb]);
-    console.log("ticker", ticker);
+    console.log("tickersHandlers", tickersHandlers);
     // {'currency': ticker, 'subs': 'subs'}
     worker.port.postMessage({'currency': ticker, 'subs': 'subs'});
 };

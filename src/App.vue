@@ -22,9 +22,9 @@
               />
             </div>
             <tamplate v-if="coinPrompts.length>0 && this.ticker">
-            <div :class="[(coinPrompts.length===4)?' justify-between ':' flex-row space-x-1 ']" class="flex box-decoration-clone px-3 py-1 relative w-full bg-white border-1 rounded-sm shadow-sm text-xs">
-              <input v-for="cp of coinPrompts" v-bind:value="cp" v-bind:key ="cp" v-on:click.stop="selectPrompts(cp)" type="button" class="px-2 pb-[2px] bg-gray-300 rounded-md cursor-pointer hover:bg-purple-400"/>
-            </div>
+              <div :class="[(coinPrompts.length===4)?' justify-between ':' flex-row space-x-1 ']" class="flex box-decoration-clone px-3 py-1 relative w-full bg-white border-1 rounded-sm shadow-sm text-xs">
+                <input v-for="cp of coinPrompts" v-bind:value="cp" v-bind:key ="cp" v-on:click.stop="selectPrompts(cp)" type="button" class="px-2 pb-[2px] bg-gray-300 rounded-md cursor-pointer hover:bg-purple-400"/>
+              </div>
             </tamplate>
             <div v-if="hasTickers" class="text-xs text-red-500">
               Такой тикер уже добавлен
@@ -52,72 +52,71 @@
           Добавить
         </button>
       </section>
-<tamplate v-if="tickers.length>0">
-      <hr class="w-full border-t border-gray-600 my-4" />
-  <div>
-    <button
-            v-if="page>1"
-            v-on:click="page = page-1"
-            class="my-4 mx-2 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-      Назад</button>
-    <button
-            v-if="hasNextPage"
-            v-on:click="page = page+1"
-            class="my-4 mx-2 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-      Вперед</button>
-    <div>Фильтр: <input v-model="filter"/></div>
-  </div>
-      <hr class="w-full border-t border-gray-600 my-4" />
-      <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <div
-                v-for="t of paginatedTickers"
-                v-bind:key ="t"
-                v-on:click="select(t)"
-                v-bind:class="{ 'border-4': selectedTicker===t }"
-                class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
-        >
-          <div
-                  v-bind:class="{ 'bg-red-100': t.price===0 }"
-                  class="px-4 py-5 sm:p-6 text-center">
-            <dt class="text-sm font-medium text-gray-500 truncate">
-              {{t.name}} - USD
-            </dt>
-            <dd class="mt-1 text-3xl font-semibold text-gray-900">
-              {{formatPrice(t.price)}}
-            </dd>
-          </div>
-          <div class="w-full border-t border-gray-200"></div>
+      <tamplate v-if="tickers.length>0">
+        <hr class="w-full border-t border-gray-600 my-4" />
+        <div>
           <button
-                  v-on:click.stop="handleDelete(t)"
-                  class="flex items-center justify-center font-medium w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500 hover:text-gray-600 hover:bg-gray-200 hover:opacity-20 transition-all focus:outline-none"
-          >
-            <svg
-                    class="h-5 w-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="#718096"
-                    aria-hidden="true"
-            >
-              <path
-                      fill-rule="evenodd"
-                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                      clip-rule="evenodd"
-              ></path></svg>Удалить
-          </button>
+                  v-if="page>1"
+                  v-on:click="page = page-1"
+                  class="my-4 mx-2 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Назад</button>
+          <button
+                  v-if="hasNextPage"
+                  v-on:click="page = page+1"
+                  class="my-4 mx-2 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Вперед</button>
+          <div>Фильтр: <input v-model="filter"/></div>
         </div>
-      </dl>
-</tamplate>
+        <hr class="w-full border-t border-gray-600 my-4" />
+        <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div
+                  v-for="t of paginatedTickers"
+                  v-bind:key ="t"
+                  v-on:click="select(t)"
+                  v-bind:class="{ 'border-4': selectedTicker===t }"
+                  class="bg-white overflow-hidden shadow rounded-lg border-purple-800 border-solid cursor-pointer"
+          >
+            <div class="px-4 py-5 sm:p-6 text-center">
+              <dt class="text-sm font-medium text-gray-500 truncate">
+                {{t.name}} - USD
+              </dt>
+              <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                {{formatPrice(t.price)}}
+              </dd>
+            </div>
+            <div class="w-full border-t border-gray-200"></div>
+            <button
+                    v-on:click.stop="handleDelete(t)"
+                    class="flex items-center justify-center font-medium w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500 hover:text-gray-600 hover:bg-gray-200 hover:opacity-20 transition-all focus:outline-none"
+            >
+              <svg
+                      class="h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="#718096"
+                      aria-hidden="true"
+              >
+                <path
+                        fill-rule="evenodd"
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                        clip-rule="evenodd"
+                ></path></svg>Удалить
+            </button>
+          </div>
+        </dl>
+      </tamplate>
       <hr class="w-full border-t border-gray-600 my-4" />
       <section v-if="selectedTicker" class="relative" >
         <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
           {{selectedTicker.name}} - USD
         </h3>
-        <div class="flex items-end border-gray-600 border-b border-l h-64">
+        <div class="flex items-end border-gray-600 border-b border-l h-64" ref="graph">
           <div
+                  ref = "bargraph"
                   v-for="(bar, idx) in normalizedGraph"
                   v-bind:key="idx"
-                  v-bind:style="{height:`${bar}%`}"
-                  class="bg-purple-800 border w-10"
+                  v-bind:style="{height:`${bar}%`, width: `38px`}"
+                  class="bg-purple-800 border"
           ></div>
         </div>
         <button
@@ -168,93 +167,103 @@
 
   // график сломан если везде одинаковые значения - исправлено все значения приведены к одному числу
   // при удалени графика остается выбор
-import {subscribeToTicker, unsubscribeFromTicker} from "./subscribe";
+  import {subscribeToTicker, unsubscribeFromTicker} from "./subscribe";
 
   export default {
-  name: "App",
-  data(){
-    return {
-      ticker: "",
-      filter: '',
+    name: "App",
+    data(){
+      return {
+        ticker: "",
+        filter: '',
 
-      tickers: [],
-      selectedTicker: null,
+        tickers: [],
+        selectedTicker: null,
 
-      graph:[],
+        graph:[],
+        graphDump: [],
+        barWidth: 1,
+        maxGraphElements: 1,
 
-      coinList:[],
-      coinPrompts:[],
-      walletFocus: false,
-      hasTickers: false,
+        coinList:[],
+        coinPrompts:[],
+        walletFocus: false,
+        hasTickers: false,
 
-      page: 1,
-    }
-  },
-  created(){
-    const windowData = Object.fromEntries([...new URL(window.location).searchParams.entries()]);
-
-    const VALID_KEYS = ['filter', 'page'];
-
-    VALID_KEYS.forEach(key=>{
-      if(windowData[key]){
-        this[key] = windowData[key];
-      }
-    });
-    // if(windowData.filter){
-    //   this.filter = windowData.filter
-    // }
-    //
-    // if(windowData.page){
-    //   this.page = windowData.page
-    // }
-
-    const tickersData = localStorage.getItem('cryptonomicon-list')
-
-    if(tickersData){
-      this.tickers = JSON.parse(tickersData);
-      this.tickers.forEach(ticker => {
-        subscribeToTicker(ticker.name, newPrice => this.updateTicker(ticker.name, newPrice));
-      })
-    }
-    setInterval(this.updateTickers, 50000000000)
-  },
-  mounted(){
-    (async ()=>{
-      const response = await fetch('https://min-api.cryptocompare.com/data/all/coinlist?summary=true')
-      if (response.ok){
-        const data = await response.json();
-        this.coinList.push(new Map(Object.entries(data.Data)));
-      }
-    })()
-  },
-  watch: {
-
-    selectedTicker(){
-      this.graph = [];
-    },
-
-    tickers(newValue, oldValue){
-      //console.log(newValue === oldValue)
-      localStorage.setItem('cryptonomicon-list', JSON.stringify(this.tickers));
-    },
-
-    paginatedTickers(){
-      //console.log('paginatedTickers',this.tickers.length)
-      if(this.paginatedTickers.length === 0 && this.page > 1){
-        this.page -=1
+        page: 1,
       }
     },
+    created(){
+      const windowData = Object.fromEntries([...new URL(window.location).searchParams.entries()]);
 
-    filter(){
-      this.page = 1;
-      // const currentURL = new URL(window.location)
-      //const {protocol, host, pathname} = window.location
+      const VALID_KEYS = ['filter', 'page'];
+
+      VALID_KEYS.forEach(key=>{
+        if(windowData[key]){
+          this[key] = windowData[key];
+        }
+      });
+      // if(windowData.filter){
+      //   this.filter = windowData.filter
+      // }
+      //
+      // if(windowData.page){
+      //   this.page = windowData.page
+      // }
+
+      const tickersData = localStorage.getItem('cryptonomicon-list')
+
+      if(tickersData){
+        this.tickers = JSON.parse(tickersData);
+        this.tickers.forEach(ticker => {
+          subscribeToTicker(ticker.name, newPrice => this.updateTicker(ticker.name, newPrice));
+        })
+      }
+      setInterval(this.updateTickers, 50000000000)
+    },
+    mounted(){
+      (async ()=>{
+        const response = await fetch('https://min-api.cryptocompare.com/data/all/coinlist?summary=true')
+        if (response.ok){
+          const data = await response.json();
+          this.coinList.push(new Map(Object.entries(data.Data)));
+        }
+      })();
+
+      window.addEventListener('resize', this.calculateMaxGraphElements)
+
     },
 
-    pageStateOptions(value){
-      window.history.pushState(null, document.title, `${window.location.pathname}?filter=${value.filter}&page=${value.page}`);
-    }
-  //   // при каждом изменении `ticker` эта функция будет запускаться
+    beforeUnmount(){
+      window.removeEventListener('resize', this.calculateMaxGraphElements)
+    },
+    watch: {
+
+      selectedTicker(){
+        this.graph = [];
+      },
+
+      tickers(newValue, oldValue){
+        //console.log(newValue === oldValue)
+        localStorage.setItem('cryptonomicon-list', JSON.stringify(this.tickers));
+      },
+
+      paginatedTickers(){
+        //console.log('paginatedTickers',this.tickers.length)
+        if(this.paginatedTickers.length === 0 && this.page > 1){
+          this.page -=1
+        }
+      },
+
+      filter(){
+        this.page = 1;
+        // const currentURL = new URL(window.location)
+        //const {protocol, host, pathname} = window.location
+      },
+
+      pageStateOptions(value){
+        window.history.pushState(null, document.title, `${window.location.pathname}?filter=${value.filter}&page=${value.page}`);
+      }
+      //   // при каждом изменении `ticker` эта функция будет запускаться
 //    ticker() {
 //       this.hasTickers = false;
 //       if(this.coinList.length){
@@ -279,63 +288,91 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./subscribe";
 //         })()
 //       }
 //     }
-  },
-  computed: {
-    startIndex(){
-      return (this.page - 1) * 6;
     },
+    computed: {
+      startIndex(){
+        return (this.page - 1) * 6;
+      },
 
-    endIndex(){
-      return this.page * 6;
-    },
+      endIndex(){
+        return this.page * 6;
+      },
 
-    filteredTickers() {
-      return this.tickers.filter(ticker => ticker.name.toLocaleLowerCase().includes(this.filter.toLocaleLowerCase()));
-    },
+      filteredTickers() {
+        return this.tickers.filter(ticker => ticker.name.toLocaleLowerCase().includes(this.filter.toLocaleLowerCase()));
+      },
 
-    paginatedTickers(){
-      return this.filteredTickers.slice(this.startIndex, this.endIndex)
-    },
+      paginatedTickers(){
+        return this.filteredTickers.slice(this.startIndex, this.endIndex)
+      },
 
-    hasNextPage(){
-      return this.filteredTickers.length > this.endIndex;
-    },
+      hasNextPage(){
+        return this.filteredTickers.length > this.endIndex;
+      },
 
-    normalizedGraph(){
-      const maxValue = Math.max(...this.graph)
-      const minValue = Math.min(...this.graph)
-      if(maxValue === minValue){
-        return this.graph.map(()=>50)
-      }
-      return this.graph.map(
-              price=>5+((price-minValue)*95)/(maxValue-minValue)
-      )
-    },
+      normalizedGraph(){
+        const maxValue = Math.max(...this.graph)
+        const minValue = Math.min(...this.graph)
+        if(maxValue === minValue){
+          return this.graph.map(()=>50)
+        }
+        return this.graph.map(
+                price=>5+((price-minValue)*95)/(maxValue-minValue)
+        )
+      },
 
-    pageStateOptions(){
-      return {
-        filter: this.filter,
-        page: this.page,
-      }
+      pageStateOptions(){
+        return {
+          filter: this.filter,
+          page: this.page,
+        }
+      },
     },
-  },
-  methods:{
-    updateTicker(tickerName, price){
-      this.tickers
-              .filter(t=>t.name === tickerName)
-              .forEach(t=>{
-                if(t === this.selectedTicker){
-                  this.graph.push(price)
-                }
-                t.price = price;
-                console.log("updateTicker", `${t.name} - ${t.price}`)
-              });
-  },
-    formatPrice(price){
-      if(price === '-' || price === 0) return "-";
-      return price>1?price.toFixed(4):price.toPrecision(4)
-    },
-    // async updateTickers(){
+    methods:{
+      calculateMaxGraphElements(){
+        if(!this.$refs.graph){
+          return;
+        }
+        //console.log("barGraph", this.$refs.bargraph[0].clientWidth);
+        // if(!this.$refs.bargraph || !this.$refs.bargraph[0]){
+        //   return;
+        // }
+        this.maxGraphElements = this.$refs.graph.clientWidth / this.barWidth;
+        //console.log("maxGraphElements", this.maxGraphElements);
+        this.showGraphElements();
+      },
+      showGraphElements(){
+        while(this.graph.length < this.maxGraphElements && this.graphDump.length > 0){
+          this.graph.unshift(this.graphDump.pop());
+        }
+        while(this.graph.length > this.maxGraphElements){
+          if(this.graphDump.length < 50) {
+            this.graphDump.push(this.graph.shift());
+          }else{
+            this.graph.shift()
+          }
+        }
+      },
+      updateTicker(tickerName, price){
+        this.tickers
+                .filter(t=>t.name === tickerName)
+                .forEach(t=>{
+                  if(t === this.selectedTicker){
+                    this.graph.push(price);
+                    if(this.graph.length === 2){
+                      this.barWidth = this.$refs.bargraph[0].clientWidth;
+                      console.log("barWidth",this.barWidth)
+                    }
+                    this.showGraphElements();
+                  }
+                  t.price = price;
+                });
+      },
+      formatPrice(price){
+        if(price === '-') return price;
+        return price>1?price.toFixed(4):price.toPrecision(4)
+      },
+      // async updateTickers(){
       // if(!this.tickers.length){
       //   return;
       // }
@@ -345,88 +382,91 @@ import {subscribeToTicker, unsubscribeFromTicker} from "./subscribe";
       //     ticker.price = price ?? '-';
       //   });
 
-    // },
+      // },
 
-    add(){
-      if(this.hasTicker(this.ticker)){
-        //console.log("add",this.hasTickers)
-        this.hasTickers = true;
-        return;
-      }
-      const currentTicker = {
-        name:this.ticker,
-        price:"-"
-      };
-      this.tickers = [...this.tickers, currentTicker];
-      this.ticker = "";
-      this.filter = "";
-      subscribeToTicker(currentTicker.name, newPrice => this.updateTicker(currentTicker.name, newPrice))
-    },
+      add(){
+        if(this.hasTicker(this.ticker)){
+          //console.log("add",this.hasTickers)
+          this.hasTickers = true;
+          return;
+        }
+        const currentTicker = {
+          name:this.ticker,
+          price:"-"
+        };
+        this.tickers = [...this.tickers, currentTicker];
+        this.ticker = "";
+        this.filter = "";
+        subscribeToTicker(currentTicker.name, newPrice => this.updateTicker(currentTicker.name, newPrice))
+      },
 
-    select(curTicker){
-      this.selectedTicker = curTicker;
-    },
+      select(curTicker){
+        this.selectedTicker = curTicker;
+        this.$nextTick().then(() => {
+          this.calculateMaxGraphElements();
+        })
+      },
 
-    handleDelete(tickerToRemove){
-      // this.tickers.forEach((tick, index)=>{
-      //   if(tick.name == name){
-      //     this.tickers.splice(index, 1)
-      //   }
-      // })
-      this.tickers = this.tickers.filter(t => t !== tickerToRemove);
-      if(this.selectedTicker === tickerToRemove){
-        this.selectedTicker = null;
-      }
-      unsubscribeFromTicker(tickerToRemove.name)
-    },
+      handleDelete(tickerToRemove){
+        // this.tickers.forEach((tick, index)=>{
+        //   if(tick.name == name){
+        //     this.tickers.splice(index, 1)
+        //   }
+        // })
+        this.tickers = this.tickers.filter(t => t !== tickerToRemove);
+        if(this.selectedTicker === tickerToRemove){
+          this.selectedTicker = null;
+        }
+        unsubscribeFromTicker(tickerToRemove.name)
+      },
 
 
 
-    addPrompt(e){
-      if(e.code === "Enter"){
-        return;
-      }
-      this.hasTickers = false;
-      if(this.coinList.length){
-        this.coinPrompts = []
+      addPrompt(e){
+        if(e.code === "Enter"){
+          return;
+        }
+        this.hasTickers = false;
+        if(this.coinList.length){
+          this.coinPrompts = []
 // console.log(this.coinList[0]['42'])toLocaleLowerCase()
-        for(let coin of this.coinList[0]) {
-          let smbl = String(coin[0]).toLocaleLowerCase()
+          for(let coin of this.coinList[0]) {
+            let smbl = String(coin[0]).toLocaleLowerCase()
 
-          //console.log(typeof smbl)
-          if(smbl.includes(this.ticker.toLocaleLowerCase())) {
-            this.coinPrompts.push(coin[0])
+            //console.log(typeof smbl)
+            if(smbl.includes(this.ticker.toLocaleLowerCase())) {
+              this.coinPrompts.push(coin[0])
+            }
+            if(this.coinPrompts.length===4) break
           }
-          if(this.coinPrompts.length===4) break
         }
-      }
-    },
+      },
 
-    selectPrompts(coinPrompt){
+      selectPrompts(coinPrompt){
 
-      if(!this.hasTicker(coinPrompt)){
-        this.ticker = coinPrompt;
-        this.add()
-      }
-    },
-    hasTicker(newTick){
-      let has = false;
-      this.tickers.forEach((tick)=>{
-        if(tick.name.toLocaleLowerCase() === newTick.toLocaleLowerCase()){
-          has = true;
+        if(!this.hasTicker(coinPrompt)){
+          this.ticker = coinPrompt;
+          this.add()
         }
-      });
-      this.hasTickers = has;
-      return has;
+      },
+      hasTicker(newTick){
+        let has = false;
+        this.tickers.forEach((tick)=>{
+          if(tick.name.toLocaleLowerCase() === newTick.toLocaleLowerCase()){
+            has = true;
+          }
+        });
+        this.hasTickers = has;
+        return has;
+      }
+      // selAdd(currentTicker){
+      //   if(this.tickers.includes(currentTicker)) {
+      //     this.sel = currentTicker
+      //   }
+      //   console.log(this.sel)
+      // }
     }
-    // selAdd(currentTicker){
-    //   if(this.tickers.includes(currentTicker)) {
-    //     this.sel = currentTicker
-    //   }
-    //   console.log(this.sel)
-    // }
-  }
-};
+  };
 </script>
 
 <style>
